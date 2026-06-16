@@ -1,0 +1,26 @@
+name: Self-Hosted Smoke Test
+on:
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: [self-hosted, avm-02]
+    steps:
+      - uses: actions/checkout@v4
+      - name: System Info
+        run: |
+          echo "✅ Job running on: $(uname -a)"
+          echo "✅ Hostname: $(hostname)"
+          echo "✅ Runner: ${{ runner.name }}"
+          echo "✅ OS: ${{ runner.os }}"
+          echo "✅ Arch: ${{ runner.arch }}"
+          echo "✅ Workflow triggered by: ${{ github.triggering_actor }}"
+      - name: Connectivity Check
+        run: |
+          echo "--- DNS ---"
+          nslookup github.com 2>&1 | head -5
+          echo "--- Git ---"
+          git --version
+          echo "--- Docker ---"
+          docker --version 2>/dev/null || echo "Docker not available"
+      - name: Final Check
+        run: echo "::notice::✅ SELF-HOSTED SMOKE TEST PASSED — avm-02 runner is working"
