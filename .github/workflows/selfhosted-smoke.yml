@@ -24,5 +24,3 @@ jobs:
           docker --version 2>/dev/null || echo "Docker not available"
       - name: Final Check
         run: echo "::notice::✅ SELF-HOSTED SMOKE TEST PASSED — avm-02 runner is working"
-
-# scope-probe (reversible)

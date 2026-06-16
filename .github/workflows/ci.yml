@@ -8,6 +8,7 @@ on:
   schedule:
     # Run tests daily at 2 AM UTC
     - cron: '0 2 * * *'
+  workflow_dispatch:
 
 env:
   NODE_VERSION: '20'
@@ -16,7 +17,7 @@ jobs:
   # Code quality and security checks
   security:
     name: Security & Code Quality
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,7 +55,7 @@ jobs:
   # All tests
   test:
     name: Test Suite
-    runs-on: ${{ matrix.os }}
+    runs-on: [self-hosted, avm-02]
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -91,7 +92,7 @@ jobs:
   # Documentation generation
   docs:
     name: Documentation & Examples
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     
     steps:
       - name: Checkout code
@@ -110,20 +111,16 @@ jobs:
 
   # Build and package
   build:
-    name: Build & Package (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    name: Build & Package (linux)
+    runs-on: [self-hosted, avm-02]
     needs: [security, test]
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
         include:
           - os: ubuntu-latest
             platform: linux
-          - os: macos-latest
-            platform: darwin
-          - os: windows-latest
-            platform: win32
 
     steps:
       - name: Checkout code
@@ -180,7 +177,7 @@ jobs:
   # Deployment (only on main branch)
   deploy:
     name: Deploy & Release
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     needs: [build]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
@@ -194,18 +191,6 @@ jobs:
           name: build-artifacts-linux
           path: dist-linux/
 
-      - name: Download macOS build
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts-darwin
-          path: dist-darwin/
-
-      - name: Download Windows build
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts-win32
-          path: dist-windows/
-
       - name: Prepare for deployment
         run: |
           echo "✅ Ready for deployment"
@@ -216,7 +201,7 @@ jobs:
   # Final status check
   status:
     name: CI Status
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     needs: [security, test, build]
     if: always()
     
