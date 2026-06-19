@@ -8,7 +8,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
