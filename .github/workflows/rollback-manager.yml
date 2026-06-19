@@ -42,7 +42,7 @@ jobs:
   # Detect failure conditions
   failure-detection:
     name: 🚨 Failure Detection
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     if: github.event_name == 'workflow_run' || github.event_name == 'push'
     outputs:
       rollback-required: ${{ steps.detect.outputs.rollback-required }}
@@ -165,7 +165,7 @@ jobs:
   # Pre-rollback validation
   pre-rollback-validation:
     name: 🔍 Pre-Rollback Validation
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     needs: failure-detection
     if: needs.failure-detection.outputs.rollback-required == 'true' || github.event_name == 'workflow_dispatch'
     outputs:
@@ -280,7 +280,7 @@ jobs:
   # Execute rollback
   execute-rollback:
     name: 🔄 Execute Rollback
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     needs: [failure-detection, pre-rollback-validation]
     if: needs.pre-rollback-validation.outputs.validation-passed == 'true' && (needs.failure-detection.outputs.failure-severity == 'high' || github.event.inputs.emergency_mode == 'true' || github.event_name == 'workflow_dispatch')
     environment: 
@@ -408,7 +408,7 @@ jobs:
   # Post-rollback verification
   post-rollback-verification:
     name: ✅ Post-Rollback Verification
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     needs: [failure-detection, execute-rollback]
     if: needs.execute-rollback.outputs.rollback-executed == 'true'
     steps:
@@ -511,7 +511,7 @@ jobs:
   # Rollback monitoring
   rollback-monitoring:
     name: 📊 Rollback Monitoring
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     needs: [failure-detection, execute-rollback, post-rollback-verification]
     if: needs.execute-rollback.outputs.rollback-executed == 'true'
     steps:
@@ -646,7 +646,7 @@ jobs:
   # Manual rollback approval (for non-emergency cases)
   manual-rollback-approval:
     name: ⏳ Manual Rollback Approval
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     needs: [failure-detection, pre-rollback-validation]
     if: needs.failure-detection.outputs.rollback-required == 'true' && needs.failure-detection.outputs.failure-severity != 'high' && github.event.inputs.emergency_mode != 'true'
     environment: 

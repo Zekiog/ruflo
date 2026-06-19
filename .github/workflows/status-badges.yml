@@ -12,7 +12,7 @@ on:
 jobs:
   update-badges:
     name: 📊 Update Status Badges
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, avm-02]
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
