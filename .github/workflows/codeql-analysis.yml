@@ -1,3 +1,31 @@
+# =============================================================================
+# INTENTIONALLY RETIRED — 2026-06-23
+# =============================================================================
+# Status: disabled_manually in GitHub Actions (workflow API)
+# Reason: GitHub Free plan runtime quota = 0; `Initialize CodeQL` step cannot
+#         run on self-hosted avm-02 because the CodeQL action downloads its
+#         managed toolchain from github.com/codeql-action-binaries at runtime
+#         which is metered against the account-level minutes pool. Once the
+#         pool is exhausted (even with self-hosted runners configured), the
+#         init step fails before analysis.
+# Replacement: CodeRabbit PR review is judged sufficient by the repo owner for
+#              security/SAST coverage on this codebase. Branch protection
+#              rules (require_review, code_owner review) remain in force.
+# Re-enable instructions:
+#   1. gh api -X PUT repos/Zekiog/ruflo/actions/workflows/codeql-analysis.yml/enable
+#      (state will flip to active_manually)
+#   2. Remove or shorten this comment block before re-enabling.
+#   3. Monitor the first run; if Initialize CodeQL fails again, this file
+#      should be edited to use the `languages` matrix or moved off self-hosted.
+# Quarantine rule note:
+#   Per Step 4 of the ruflo-fork recovery-and-migration contract, max 2
+#   retries per failing item before quarantine. For this workflow the owner
+#   OVERRODE the retry protocol and chose direct-disable because CodeRabbit
+#   already covers the security review path.
+# Owner decision log: "CodeQL calismiyor cunku github hesabim uzerinde (free)
+#   hic runtime kalmadi. Care: selv-host = avm-02. Fakat simdilik devredisi
+#   birak, cunku coderabbit yeterli." — 2026-06-23
+# =============================================================================
 name: "CodeQL"
 on:
   workflow_dispatch: {}
