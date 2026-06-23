@@ -172,6 +172,25 @@ jobs:
       validation-passed: ${{ steps.validate.outputs.validation-passed }}
       backup-created: ${{ steps.validate.outputs.backup-created }}
     steps:
+      # Self-host approval gate: requires a sentinel file on the runner
+      # managed by the repository owner (avm-02). File present = approved.
+      # This compensates for GitHub Free plan not supporting required-reviewers
+      # on environments. To grant approval: ssh avm-02 && sudo touch /var/lib/rollback-approval.token
+      # To revoke: sudo rm /var/lib/rollback-approval.token
+      - name: Approval gate (self-host sentinel)
+        run: |
+          SENTINEL="/var/lib/rollback-approval.token"
+          if [ ! -f "$SENTINEL" ]; then
+            echo "❌ Rollback approval gate FAIL: sentinel file $SENTINEL not found on runner."
+            echo "   This gate compensates for GitHub Free plan not supporting required-reviewers."
+            echo "   To approve: ssh avm-02 && sudo touch $SENTINEL"
+            echo "   To revoke: sudo rm $SENTINEL"
+            echo "   Emergency override (not recommended): re-run with workflow_dispatch input emergency_mode=true"
+            exit 1
+          fi
+          echo "✅ Approval gate PASS: $SENTINEL present on runner"
+          stat -c '%y' "$SENTINEL" 2>/dev/null || stat -f '%Sm' "$SENTINEL" 2>/dev/null || true
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
