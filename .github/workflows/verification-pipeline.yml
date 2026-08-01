@@ -283,6 +283,7 @@ jobs:
           path: |
             *.tgz
             v3/@claude-flow/cli/bin/
+            v3/@claude-flow/cli/dist/
             dist/
           if-no-files-found: warn
           retention-days: 30
