@@ -276,6 +276,17 @@ jobs:
           ls -la *.tgz 2>/dev/null || echo "No tgz files created"
         continue-on-error: true
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-${{ needs.setup-verification.outputs.verification-id }}
+          path: |
+            *.tgz
+            v3/@claude-flow/cli/bin/
+            dist/
+          if-no-files-found: warn
+          retention-days: 30
+
   # Documentation verification - simplified checks
   docs-verification:
     name: 📚 Documentation Verification
@@ -319,6 +330,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts-${{ needs.setup-verification.outputs.verification-id }}
+        continue-on-error: true
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
