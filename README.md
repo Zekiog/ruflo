@@ -1,3 +1,5 @@
+> **Status:** 🚧 Active development — TypeScript monorepo. Looking for contributors.
+
 <div align="center">
 
 [![Ruflo Banner](ruflo/assets/ruflo-small.jpeg)](https://flo.ruv.io/)
