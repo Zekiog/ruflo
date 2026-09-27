@@ -36,7 +36,7 @@ jobs:
   # Setup integration test environment
   integration-setup:
     name: 🚀 Integration Test Setup
-    runs-on: [self-hosted, avm-02]
+    runs-on: ubuntu-latest
     outputs:
       test-session-id: ${{ steps.setup.outputs.test-session-id }}
       agent-matrix: ${{ steps.setup.outputs.agent-matrix }}
@@ -141,7 +141,7 @@ jobs:
   # Test agent coordination
   test-agent-coordination:
     name: 🤝 Agent Coordination Tests
-    runs-on: [self-hosted, avm-02]
+    runs-on: ubuntu-latest
     needs: integration-setup
     strategy:
       fail-fast: false
@@ -293,7 +293,7 @@ jobs:
   # Test memory sharing integration
   test-memory-integration:
     name: 🧠 Memory Sharing Integration
-    runs-on: [self-hosted, avm-02]
+    runs-on: ubuntu-latest
     needs: integration-setup
     steps:
       - name: Checkout repository
@@ -415,7 +415,7 @@ jobs:
   # Test fault tolerance
   test-fault-tolerance:
     name: 🛡️ Fault Tolerance Tests
-    runs-on: [self-hosted, avm-02]
+    runs-on: ubuntu-latest
     needs: integration-setup
     steps:
       - name: Checkout repository
@@ -543,7 +543,7 @@ jobs:
   # Test performance under load
   test-performance-integration:
     name: ⚡ Performance Integration Tests
-    runs-on: [self-hosted, avm-02]
+    runs-on: ubuntu-latest
     needs: integration-setup
     steps:
       - name: Checkout repository
@@ -684,7 +684,7 @@ jobs:
   # Generate integration test report
   integration-test-report:
     name: 📊 Integration Test Report
-    runs-on: [self-hosted, avm-02]
+    runs-on: ubuntu-latest
     needs: [
       integration-setup,
       test-agent-coordination,
