@@ -14,7 +14,10 @@ jobs:
   update-badges:
     name: 📊 Update Status Badges
     runs-on: [self-hosted, avm-02]
-    if: github.ref == 'refs/heads/main'
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name != 'workflow_run' ||
+       github.event.workflow_run.head_repository.full_name == github.repository)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
