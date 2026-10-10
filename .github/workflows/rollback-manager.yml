@@ -43,7 +43,11 @@ jobs:
   failure-detection:
     name: 🚨 Failure Detection
     runs-on: [self-hosted, avm-02]
-    if: github.event_name == 'workflow_run' || github.event_name == 'push'
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.head_repository.full_name == github.repository &&
+       github.event.workflow_run.event == 'push')
     outputs:
       rollback-required: ${{ steps.detect.outputs.rollback-required }}
       failure-type: ${{ steps.detect.outputs.failure-type }}
